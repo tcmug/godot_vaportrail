@@ -11,8 +11,8 @@ def validate_parent_dir(key, val, env):
         raise UserError("'%s' is not a directory: %s" % (key, os.path.dirname(val)))
 
 
-libname = "trailmesh"
-projectdir = "project/addons/trailmesh"
+libname = "vaportrail"
+projectdir = "project/addons/vaportrail"
 
 localEnv = Environment(tools=["default"], PLATFORM="")
 

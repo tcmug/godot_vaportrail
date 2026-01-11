@@ -1,6 +1,6 @@
-#ifndef TRAILEMITTER__H
-#define TRAILEMITTER__H
+#pragma once
 
+#include "vapor_props.hpp"
 #include <godot_cpp/classes/curve.hpp>
 #include <godot_cpp/classes/gradient.hpp>
 #include <godot_cpp/classes/material.hpp>
@@ -9,32 +9,25 @@
 
 namespace godot {
 
-class TrailMesh;
+class VaporProps;
 
-class TrailEmitter : public Node3D {
-	GDCLASS(TrailEmitter, Node3D)
+class VaporTrailMesh;
 
-	friend class TrailMesh;
+class VaporTrail : public Node3D {
+	GDCLASS(VaporTrail, Node3D)
+
+	friend class VaporTrailMesh;
 
 private:
-	int num_points;
-	float noise_scale;
-	float size;
-	double update_interval;
-	double uv_shift;
-	TrailMesh *trail_mesh;
+	Ref<VaporProps> props;
 	NodePath geometry_root;
-
-	Ref<Gradient> gradient;
-	Ref<Curve> curve;
-	Ref<Material> material;
 
 protected:
 	static void _bind_methods();
 
 public:
-	TrailEmitter();
-	~TrailEmitter();
+	VaporTrail();
+	~VaporTrail();
 
 	void _ready() override;
 
@@ -50,14 +43,20 @@ public:
 	float get_size() const;
 	void set_size(float value);
 
+	float get_minimum_onscreen_size() const;
+	void set_minimum_onscreen_size(float value);
+
+	int get_alignment() const;
+	void set_alignment(int new_mode);
+
 	Ref<Curve> get_curve() const;
 	void set_curve(const Ref<Curve> new_curve);
 
 	Ref<Gradient> get_gradient() const;
 	void set_gradient(const Ref<Gradient> new_gradient);
 
-	float get_noise_scale() const;
-	void set_noise_scale(float value);
+	float get_randomness() const;
+	void set_randomness(float value);
 
 	double get_uv_shift() const;
 	void set_uv_shift(double value);
@@ -65,8 +64,7 @@ public:
 	double get_update_interval() const;
 	void set_update_interval(double value);
 
-	void offset_mesh_points(Vector3 offset);
+protected:
+	virtual bool _set(const StringName &p_name, const Variant &p_value);
 };
 } //namespace godot
-
-#endif

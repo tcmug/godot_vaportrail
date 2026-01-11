@@ -1,15 +1,13 @@
-#ifndef TRAILPOINT_H
-#define TRAILPOINT_H
+#pragma once
 
 #include <godot_cpp/variant/vector3.hpp>
 
 using namespace godot;
 
-class TrailPoint {
+class VaporTrailPoint {
 public:
 	Vector3 center;
-	Vector3 direction_vector;
+	Vector3 direction;
+	Vector3 up;
 	float size = 0.0;
 };
-
-#endif
