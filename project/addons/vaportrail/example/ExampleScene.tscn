@@ -56,11 +56,12 @@ vertex_color_use_as_albedo = true
 albedo_texture = ExtResource("1_6iu73")
 emission_enabled = true
 emission = Color(0.8675581, 0.8931362, 0.42420506, 1)
+emission_energy_multiplier = 0.0
 normal_texture = ExtResource("2_m823o")
 
 [sub_resource type="Gradient" id="Gradient_dx8xt"]
 offsets = PackedFloat32Array(0, 0.09174312, 1)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1)
 
 [sub_resource type="Curve3D" id="Curve3D_45udd"]
 _data = {
@@ -110,7 +111,7 @@ curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(0.8187647, 0.02247457, 0.57368, -9.313172e-10, 0.99922305, -0.039146185, -0.5741192, 0.032051504, 0.81813824, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.8187647, 0.022474546, 0.57368, -9.313172e-10, 0.999222, -0.039146185, -0.5741192, 0.03205147, 0.81813824, -1.27339, 0.403995, 0.598389)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
@@ -118,7 +119,7 @@ mesh = SubResource("BoxMesh_job12")
 
 [node name="TrailEmitter" type="VaporTrail" parent="Path3D/PathFollow3D/MeshInstance3D"]
 config/alignment = 2
-config/num_points = 50
+config/num_points = 20
 visual/material = SubResource("StandardMaterial3D_5enqk")
 visual/size = 0.1
 visual/minimum_onscreen_size = 20.0
@@ -142,7 +143,7 @@ script = ExtResource("3_tpcue")
 environment = SubResource("Environment_72flp")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.2
 autostart = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]

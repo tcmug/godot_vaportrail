@@ -42,7 +42,9 @@ void VaporTrailMesh::initialize_arrays() {
 	trail_points = new VaporTrailPoint[num_points];
 	Transform3D emitter_transform = props->emitter->get_global_transform();
 	for (int i = 0; i < num_points; i++) {
-		trail_points[i].center = to_local(emitter_transform.origin);
+		Vector3 origin = to_local(emitter_transform.origin);
+		trail_points[i].position = origin;
+		trail_points[i].source_position = origin;
 		trail_points[i].direction.zero();
 		trail_points[i].up.zero();
 		trail_points[i].size = 0;
@@ -150,19 +152,24 @@ void VaporTrailMesh::_process(double delta) {
 	int num_vertices = vertex_buffer.size();
 	elapsed += delta;
 	total_elapsed += delta;
-	if (elapsed >= props->update_interval) {
-		elapsed -= props->update_interval;
+
+	if (elapsed >= update_interval) {
+		elapsed -= update_interval;
 		memmove(&trail_points[1], trail_points, sizeof(VaporTrailPoint) * (num_points - 1));
 	}
 
-	float update_fraction = elapsed / props->update_interval;
+	double update_fraction = elapsed / update_interval;
+
+	// Interpolate last point towards second last for smoother effect.
+	trail_points[num_points - 1].lerp(trail_points[num_points - 2], update_fraction);
 
 	// Update active point.
 	float spawn_size = props->size;
 	if (props->noise_scale != 0.0) {
 		spawn_size *= UtilityFunctions::randf_range(1.0 - props->noise_scale, 1.0 + props->noise_scale);
 	}
-	trail_points[0].center = current_position;
+	trail_points[0].position = current_position;
+	trail_points[0].source_position = current_position;
 	trail_points[0].direction = direction_vector;
 	trail_points[0].size = spawn_size;
 	if (props->alignment > 0 && props->alignment < 4) {
@@ -184,8 +191,11 @@ void VaporTrailMesh::_process(double delta) {
 	Vector3 min_pos = Vector3(10000, 10000, 10000);
 	Vector3 max_pos = Vector3(-10000, -10000, -10000);
 
+	// Since points are fixed in space, animate uv (x) over the update interval.
+	double uv_adjustment = (update_fraction / num_points) + (total_elapsed * uv_shift);
+
 	for (int i = 0; i < num_points; i++) {
-		Vector3 normal = trail_points[i].center.direction_to(camera_position);
+		Vector3 normal = trail_points[i].position.direction_to(camera_position);
 		Vector3 orientation;
 		if (props->alignment == 0) {
 			// Normalize for keeping sizes consistent.
@@ -195,7 +205,7 @@ void VaporTrailMesh::_process(double delta) {
 		}
 		Vector3 tangent = trail_points[i].direction;
 
-		Vector3 to_cam = camera_position - trail_points[i].center;
+		Vector3 to_cam = camera_position - trail_points[i].position;
 		float dist = to_cam.length();
 		double sz = trail_points[i].size;
 		sz = calculate_scaled_size(sz, dist, fov_rad, viewport_height, props->minimum_onscreen_size);
@@ -204,7 +214,7 @@ void VaporTrailMesh::_process(double delta) {
 		}
 
 		Vector3 edge_vector = orientation * (sz * 0.5);
-		Vector3 &position = trail_points[i].center;
+		Vector3 &position = trail_points[i].position;
 
 		// Keep track of min and max points.
 		min_pos.x = min(position.x, min_pos.x);
@@ -229,11 +239,9 @@ void VaporTrailMesh::_process(double delta) {
 		tangent_buffer[ti++] = tangent.z;
 		tangent_buffer[ti++] = 1;
 
-		double ux = i / double(num_points);
-		ux -= ((uv_shift + 1.0) * ((total_elapsed / update_interval) / num_points));
-		double x = ux + (update_fraction * (1.0 / num_points));
-		uv_buffer[uvi++] = Vector2(x, 0);
-		uv_buffer[uvi++] = Vector2(x, 1);
+		double ux = (i / double(num_points)) + uv_adjustment;
+		uv_buffer[uvi++] = Vector2(ux, 0);
+		uv_buffer[uvi++] = Vector2(ux, 1);
 
 		if (props->gradient.is_valid()) {
 			// Two vertices with same color.
