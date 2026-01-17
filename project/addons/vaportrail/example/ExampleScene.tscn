@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=3 uid="uid://duuj8y4ltnxx4"]
+[gd_scene load_steps=24 format=3 uid="uid://duuj8y4ltnxx4"]
 
 [ext_resource type="Script" uid="uid://dbvaxllvh5a5m" path="res://addons/vaportrail/example/example_scene.gd" id="1_2hso6"]
 [ext_resource type="Texture2D" uid="uid://gn7hoa3umle6" path="res://addons/vaportrail/example/tr0n.png" id="1_6iu73"]
 [ext_resource type="Texture2D" uid="uid://6hiavd5uxq8r" path="res://addons/vaportrail/example/normal.png" id="2_m823o"]
 [ext_resource type="Script" uid="uid://ck8eb0fy28vat" path="res://addons/vaportrail/example/Camera.gd" id="3_tpcue"]
+[ext_resource type="Texture2D" uid="uid://b3ojc6x8opvon" path="res://addons/vaportrail/example/vapor.png" id="4_2hso6"]
 
 [sub_resource type="Animation" id="Animation_f5fpc"]
 resource_name = "Go!"
@@ -33,10 +34,38 @@ tracks/1/keys = {
 "update": 0,
 "values": [0.0, 1.0, 2.0]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Path3D3/PathFollow3D:progress_ratio")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 16),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+
+[sub_resource type="Animation" id="Animation_7sftb"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Path3D3/PathFollow3D:progress_ratio")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_qss24"]
 _data = {
-&"Go!": SubResource("Animation_f5fpc")
+&"Go!": SubResource("Animation_f5fpc"),
+&"RESET": SubResource("Animation_7sftb")
 }
 
 [sub_resource type="Curve3D" id="Curve3D_1cqmv"]
@@ -62,6 +91,19 @@ normal_texture = ExtResource("2_m823o")
 [sub_resource type="Gradient" id="Gradient_dx8xt"]
 offsets = PackedFloat32Array(0, 0.09174312, 1)
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2hso6"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_romn7"]
+transparency = 1
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_2hso6")
+uv1_scale = Vector3(5, 1, 1)
+
+[sub_resource type="Gradient" id="Gradient_4frb0"]
+offsets = PackedFloat32Array(0, 0.26253688, 0.5899705, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="Curve3D" id="Curve3D_45udd"]
 _data = {
@@ -94,6 +136,13 @@ height = 0.1
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_7sftb"]
 points = PackedVector3Array(0, -0.05, -0.3, -0.029424429, -0.05, -0.29859045, 0, 0.05, -0.3, 0.029365689, -0.05, -0.29859045, -0.029424429, 0.05, -0.29859045, -0.058555216, -0.05, -0.29424435, 0.029365689, 0.05, -0.29859045, 0.058496475, -0.05, -0.29424435, -0.058555216, 0.05, -0.29424435, -0.08709867, -0.05, -0.28713784, 0.058496475, 0.05, -0.29424435, 0.08703992, -0.05, -0.28713784, -0.08709867, 0.05, -0.28713784, -0.1148199, -0.05, -0.27721223, 0.08703992, 0.05, -0.28713784, 0.114761144, -0.05, -0.27721223, -0.1148199, 0.05, -0.27721223, -0.14142522, -0.05, -0.264585, 0.114761144, 0.05, -0.27721223, 0.14136648, -0.05, -0.264585, -0.14142522, 0.05, -0.264585, -0.16667973, -0.05, -0.249491, 0.14136648, 0.05, -0.264585, 0.16662097, -0.05, -0.249491, -0.16667973, 0.05, -0.249491, -0.19034848, -0.05, -0.23193032, 0.16662097, 0.05, -0.249491, 0.19028974, -0.05, -0.23193032, -0.19034848, 0.05, -0.23193032, -0.21213783, -0.05, -0.21213783, 0.19028974, 0.05, -0.23193032, 0.21207911, -0.05, -0.21213783, -0.21213783, 0.05, -0.21213783, -0.23193032, -0.05, -0.19034848, 0.21207911, 0.05, -0.21213783, 0.23187155, -0.05, -0.19034848, -0.23193032, 0.05, -0.19034848, -0.249491, -0.05, -0.16667973, 0.23187155, 0.05, -0.19034848, 0.24943227, -0.05, -0.16667973, -0.249491, 0.05, -0.16667973, -0.264585, -0.05, -0.14142522, 0.24943227, 0.05, -0.16667973, 0.26452625, -0.05, -0.14142522, -0.264585, 0.05, -0.14142522, -0.27721223, -0.05, -0.1148199, 0.26452625, 0.05, -0.14142522, 0.2771535, -0.05, -0.1148199, -0.27721223, 0.05, -0.1148199, -0.28713784, -0.05, -0.08709867, 0.2771535, 0.05, -0.1148199, 0.2870791, -0.05, -0.08709867, -0.28713784, 0.05, -0.08709867, -0.29424435, -0.05, -0.058555216, 0.2870791, 0.05, -0.08709867, 0.29418558, -0.05, -0.058555216, -0.29424435, 0.05, -0.058555216, -0.29859045, -0.05, -0.029424429, 0.29418558, 0.05, -0.058555216, 0.2985317, -0.05, -0.029424429, -0.29859045, 0.05, -0.029424429, -0.3, -0.05, 0, 0.2985317, 0.05, -0.029424429, 0.3, -0.05, 0, -0.3, 0.05, 0, -0.29859045, -0.05, 0.029365689, 0.3, 0.05, 0, 0.2985317, -0.05, 0.029365689, -0.29859045, 0.05, 0.029365689, -0.29424435, -0.05, 0.058496475, 0.2985317, 0.05, 0.029365689, 0.29418558, -0.05, 0.058496475, -0.29424435, 0.05, 0.058496475, -0.28713784, -0.05, 0.08703992, 0.29418558, 0.05, 0.058496475, 0.2870791, -0.05, 0.08703992, -0.28713784, 0.05, 0.08703992, -0.27721223, -0.05, 0.114761144, 0.2870791, 0.05, 0.08703992, 0.2771535, -0.05, 0.114761144, -0.27721223, 0.05, 0.114761144, -0.264585, -0.05, 0.14136648, 0.2771535, 0.05, 0.114761144, 0.26452625, -0.05, 0.14136648, -0.264585, 0.05, 0.14136648, -0.249491, -0.05, 0.16662097, 0.26452625, 0.05, 0.14136648, 0.24943227, -0.05, 0.16662097, -0.249491, 0.05, 0.16662097, -0.23193032, -0.05, 0.19028974, 0.24943227, 0.05, 0.16662097, 0.23187155, -0.05, 0.19028974, -0.23193032, 0.05, 0.19028974, -0.21213783, -0.05, 0.21207911, 0.23187155, 0.05, 0.19028974, 0.21207911, -0.05, 0.21207911, -0.21213783, 0.05, 0.21207911, -0.19034848, -0.05, 0.23187155, 0.21207911, 0.05, 0.21207911, 0.19028974, -0.05, 0.23187155, -0.19034848, 0.05, 0.23187155, -0.16667973, -0.05, 0.24943227, 0.19028974, 0.05, 0.23187155, 0.16662097, -0.05, 0.24943227, -0.16667973, 0.05, 0.24943227, -0.14142522, -0.05, 0.26452625, 0.16662097, 0.05, 0.24943227, 0.14136648, -0.05, 0.26452625, -0.14142522, 0.05, 0.26452625, -0.1148199, -0.05, 0.2771535, 0.14136648, 0.05, 0.26452625, 0.114761144, -0.05, 0.2771535, -0.1148199, 0.05, 0.2771535, -0.08709867, -0.05, 0.2870791, 0.114761144, 0.05, 0.2771535, 0.08703992, -0.05, 0.2870791, -0.08709867, 0.05, 0.2870791, -0.058555216, -0.05, 0.29418558, 0.08703992, 0.05, 0.2870791, 0.058496475, -0.05, 0.29418558, -0.058555216, 0.05, 0.29418558, -0.029424429, -0.05, 0.2985317, 0.058496475, 0.05, 0.29418558, 0.029365689, -0.05, 0.2985317, -0.029424429, 0.05, 0.2985317, 0, -0.05, 0.3, 0.029365689, 0.05, 0.2985317, 0, 0.05, 0.3)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7sftb"]
+albedo_color = Color(0.26, 0.26, 0.26, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7sftb"]
+material = SubResource("StandardMaterial3D_7sftb")
+size = Vector3(1, 0.2, 1)
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_2hso6")
 
@@ -111,7 +160,7 @@ curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(0.8187647, 0.022474546, 0.57368, -9.313172e-10, 0.999222, -0.039146185, -0.5741192, 0.03205147, 0.81813824, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.81876224, 0.02247444, 0.57367915, -9.313144e-10, 0.9992172, -0.03914613, -0.57411754, 0.032051317, 0.8181371, -1.27339, 0.403995, 0.598389)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
@@ -126,12 +175,34 @@ visual/minimum_onscreen_size = 20.0
 visual/color_gradient = SubResource("Gradient_dx8xt")
 transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 
+[node name="Path3D3" type="Path3D" parent="."]
+transform = Transform3D(-0.22554617, 1.9717872e-08, -0.9742325, -8.742278e-08, -1, 0, -0.9742325, 8.517011e-08, 0.22554617, 0, 0.8261885, 0)
+curve = SubResource("Curve3D_1cqmv")
+metadata/_edit_group_ = true
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D3"]
+transform = Transform3D(0.8187647, 0.022474479, 0.57368, -9.3131725e-10, 0.999219, -0.039146185, -0.57411927, 0.032051373, 0.8181382, -1.27339, 0.403995, 0.598389)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D3/PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
+mesh = SubResource("BoxMesh_2hso6")
+
+[node name="TrailEmitter" type="VaporTrail" parent="Path3D3/PathFollow3D/MeshInstance3D"]
+config/num_points = 20
+config/randomness = 0.2
+visual/material = SubResource("StandardMaterial3D_romn7")
+visual/size = 0.1
+visual/minimum_onscreen_size = 20.0
+visual/color_gradient = SubResource("Gradient_4frb0")
+visual/uv_shift = -0.5
+transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
+
 [node name="Path3D2" type="Path3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.05538, 0)
 curve = SubResource("Curve3D_45udd")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D2"]
-transform = Transform3D(0.08936568, -2.830915e-05, -0.99599016, -9.094868e-13, 1, -2.8422628e-05, 0.99599016, 2.5400527e-06, 0.08936568, 0, 0, 3)
+transform = Transform3D(0.0893655, -2.830915e-05, -0.9959881, -9.094849e-13, 1, -2.8422568e-05, 0.9959881, 2.5400527e-06, 0.0893655, 0, 0, 3)
 tilt_enabled = false
 
 [node name="Camera3D" type="Camera3D" parent="Path3D2/PathFollow3D"]
@@ -154,5 +225,11 @@ mesh = SubResource("CylinderMesh_7sftb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_7sftb")
+
+[node name="VaporTrail" type="VaporTrail" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_7sftb")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

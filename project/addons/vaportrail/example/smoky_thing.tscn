@@ -8,8 +8,8 @@ _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.2924791, 1), 0.0, 0.0, 0, 0, V
 point_count = 3
 
 [sub_resource type="Gradient" id="Gradient_4ciwx"]
-offsets = PackedFloat32Array(0, 0.24299066, 0.49844238, 0.64174455, 0.7009346, 0.7757009, 1)
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 0.77, 0.61600006, 0, 1, 0.86, 0.62307, 0.1118, 1, 0.48, 0.062399995, 0.062399995, 1, 0, 0, 0, 1, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.06853583, 0.14330219, 0.28037384, 0.5451713, 0.89719623, 0.99688476)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 0.8928636, 0.83372813, 0, 1, 0.86, 0.62307, 0.1118, 1, 0.48, 0.062399995, 0.062399995, 1, 0, 0, 0, 1, 1, 1, 1, 0)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7sftb"]
 radius = 0.05
