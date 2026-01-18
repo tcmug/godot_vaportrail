@@ -1,4 +1,5 @@
 #include "vapor_trail_mesh.hpp"
+#include "vapor_trail_point.hpp"
 // #include <godot_cpp/core/class_db.hpp>
 
 #include <godot_cpp/classes/array_mesh.hpp>
@@ -145,6 +146,7 @@ void VaporTrailMesh::_process(double delta) {
 	Vector3 current_position = props->emitter_transform.origin;
 	Transform3D inverse_transform = props->emitter_transform.inverse();
 	Vector3 new_direction_vector = previous_transform.origin.direction_to(current_position);
+
 	if (new_direction_vector.length() > 0.0) {
 		direction_vector = new_direction_vector;
 	}
@@ -156,6 +158,12 @@ void VaporTrailMesh::_process(double delta) {
 	if (elapsed >= update_interval) {
 		elapsed -= update_interval;
 		memmove(&trail_points[1], trail_points, sizeof(VaporTrailPoint) * (num_points - 1));
+		// Initialize new point size;
+		float spawn_size = props->size;
+		if (props->noise_scale != 0.0) {
+			spawn_size *= UtilityFunctions::randf_range(1.0 - props->noise_scale, 1.0 + props->noise_scale);
+		}
+		trail_points[0].size = spawn_size;
 	}
 
 	double update_fraction = elapsed / update_interval;
@@ -164,14 +172,9 @@ void VaporTrailMesh::_process(double delta) {
 	trail_points[num_points - 1].lerp(trail_points[num_points - 2], update_fraction);
 
 	// Update active point.
-	float spawn_size = props->size;
-	if (props->noise_scale != 0.0) {
-		spawn_size *= UtilityFunctions::randf_range(1.0 - props->noise_scale, 1.0 + props->noise_scale);
-	}
 	trail_points[0].position = current_position;
 	trail_points[0].source_position = current_position;
 	trail_points[0].direction = direction_vector;
-	trail_points[0].size = spawn_size;
 	if (props->alignment > 0 && props->alignment < 4) {
 		trail_points[0].up = inverse_transform.basis[props->alignment - 1];
 	}
@@ -195,26 +198,32 @@ void VaporTrailMesh::_process(double delta) {
 	double uv_adjustment = (update_fraction / num_points) + (total_elapsed * uv_shift);
 
 	for (int i = 0; i < num_points; i++) {
-		Vector3 normal = trail_points[i].position.direction_to(camera_position);
+		// -1 ensures the last point sampled isn't somewhere beyond num_points.
+		double fif = (i + update_fraction) / (num_points - 1);
+		const VaporTrailPoint &trail_point = trail_points[i];
+
+		Vector3 normal = trail_point.position.direction_to(camera_position);
 		Vector3 orientation;
+
 		if (props->alignment == 0) {
 			// Normalize for keeping sizes consistent.
-			orientation = normal.cross(trail_points[i].direction).normalized();
+			orientation = normal.cross(trail_point.direction).normalized();
 		} else {
-			orientation = trail_points[i].up;
+			orientation = trail_point.up;
 		}
-		Vector3 tangent = trail_points[i].direction;
 
-		Vector3 to_cam = camera_position - trail_points[i].position;
+		Vector3 tangent = trail_point.direction;
+		Vector3 to_cam = camera_position - trail_point.position;
 		float dist = to_cam.length();
-		double sz = trail_points[i].size;
+
+		double sz = trail_point.size;
 		sz = calculate_scaled_size(sz, dist, fov_rad, viewport_height, props->minimum_onscreen_size);
 		if (props->curve.is_valid()) {
-			sz *= props->curve->sample_baked((double(i + update_fraction) / double(num_points)));
+			sz *= props->curve->sample_baked(fif);
 		}
 
 		Vector3 edge_vector = orientation * (sz * 0.5);
-		Vector3 &position = trail_points[i].position;
+		const Vector3 &position = trail_point.position;
 
 		// Keep track of min and max points.
 		min_pos.x = min(position.x, min_pos.x);
@@ -243,9 +252,11 @@ void VaporTrailMesh::_process(double delta) {
 		uv_buffer[uvi++] = Vector2(ux, 0);
 		uv_buffer[uvi++] = Vector2(ux, 1);
 
+		// As the gradient is color per vertex, too hard gradients cause mesh to flicker,
+		// probably interpolate between the points or make this a texture?
 		if (props->gradient.is_valid()) {
 			// Two vertices with same color.
-			Color color = props->gradient->sample((double(i + update_fraction) / double(num_points)));
+			Color color = props->gradient->sample(fif);
 			color_buffer[ci++] = color;
 			color_buffer[ci++] = color;
 		}
