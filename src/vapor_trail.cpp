@@ -1,5 +1,5 @@
 #include "vapor_trail.hpp"
-#include "vapor_trail_mesh.hpp"
+#include "vapor_mesh.hpp"
 
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -108,7 +108,7 @@ void VaporTrail::_ready() {
 	if (!geometry_root_node) {
 		geometry_root_node = this;
 	}
-	VaporTrailMesh *trail_mesh = memnew(VaporTrailMesh);
+	VaporMesh *trail_mesh = memnew(VaporMesh);
 	trail_mesh->props = props;
 	trail_mesh->set_material_override(props->material);
 	trail_mesh->set_as_top_level(true);

@@ -4,7 +4,7 @@
 
 using namespace godot;
 
-class VaporTrailPoint {
+class VaporPoint {
 public:
 	Vector3 source_position;
 	Vector3 position;
@@ -14,7 +14,7 @@ public:
 
 	float size = 0.0;
 
-	void lerp(const VaporTrailPoint &other, double t) {
+	void lerp(const VaporPoint &other, double t) {
 		position = source_position.lerp(other.position, t);
 	}
 };

@@ -1,5 +1,5 @@
-#include "vapor_trail_mesh.hpp"
-#include "vapor_trail_point.hpp"
+#include "vapor_mesh.hpp"
+#include "vapor_point.hpp"
 // #include <godot_cpp/core/class_db.hpp>
 
 #include <godot_cpp/classes/array_mesh.hpp>
@@ -14,7 +14,7 @@
 
 using namespace godot;
 
-VaporTrailMesh::VaporTrailMesh() {
+VaporMesh::VaporMesh() {
 	fade_away_timer = 0.0;
 	elapsed = 0.0;
 	num_points = 0;
@@ -22,10 +22,10 @@ VaporTrailMesh::VaporTrailMesh() {
 	trail_points = nullptr;
 }
 
-void VaporTrailMesh::_bind_methods() {
+void VaporMesh::_bind_methods() {
 }
 
-void VaporTrailMesh::initialize_arrays() {
+void VaporMesh::initialize_arrays() {
 	if (!props.is_valid()) {
 		return;
 	}
@@ -40,7 +40,7 @@ void VaporTrailMesh::initialize_arrays() {
 	if (trail_points) {
 		delete[] trail_points;
 	}
-	trail_points = new VaporTrailPoint[num_points];
+	trail_points = new VaporPoint[num_points];
 	Transform3D emitter_transform = props->emitter->get_global_transform();
 	for (int i = 0; i < num_points; i++) {
 		Vector3 origin = to_local(emitter_transform.origin);
@@ -52,7 +52,7 @@ void VaporTrailMesh::initialize_arrays() {
 	}
 }
 
-void VaporTrailMesh::offset_mesh_points(Vector3 offset) {
+void VaporMesh::offset_mesh_points(Vector3 offset) {
 	if (!props.is_valid()) {
 		return;
 	}
@@ -64,11 +64,11 @@ void VaporTrailMesh::offset_mesh_points(Vector3 offset) {
 	//	}
 }
 
-VaporTrailMesh::~VaporTrailMesh() {
+VaporMesh::~VaporMesh() {
 	delete[] trail_points;
 }
 
-void VaporTrailMesh::_ready() {
+void VaporMesh::_ready() {
 	if (!props.is_valid()) {
 		UtilityFunctions::push_error("Spawned VaporTrailMesh without props, freeing");
 		queue_free();
@@ -110,7 +110,7 @@ float calculate_scaled_size(
 	}
 }
 
-void VaporTrailMesh::_process(double delta) {
+void VaporMesh::_process(double delta) {
 	if (!props->emitter) {
 		// Handle removal
 		props->size = 0.0;
@@ -157,7 +157,7 @@ void VaporTrailMesh::_process(double delta) {
 
 	if (elapsed >= update_interval) {
 		elapsed -= update_interval;
-		memmove(&trail_points[1], trail_points, sizeof(VaporTrailPoint) * (num_points - 1));
+		memmove(&trail_points[1], trail_points, sizeof(VaporPoint) * (num_points - 1));
 		// Initialize new point size;
 		float spawn_size = props->size;
 		if (props->noise_scale != 0.0) {
@@ -200,7 +200,7 @@ void VaporTrailMesh::_process(double delta) {
 	for (int i = 0; i < num_points; i++) {
 		// -1 ensures the last point sampled isn't somewhere beyond num_points.
 		double fif = (i + update_fraction) / (num_points - 1);
-		const VaporTrailPoint &trail_point = trail_points[i];
+		const VaporPoint &trail_point = trail_points[i];
 
 		Vector3 normal = trail_point.position.direction_to(camera_position);
 		Vector3 orientation;

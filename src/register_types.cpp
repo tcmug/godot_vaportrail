@@ -1,5 +1,5 @@
+#include "vapor_mesh.hpp"
 #include "vapor_trail.hpp"
-#include "vapor_trail_mesh.hpp"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
@@ -14,8 +14,8 @@ void initialize_vaportrail_module(ModuleInitializationLevel p_level) {
 	}
 
 	ClassDB::register_class<VaporProps>(true);
+	ClassDB::register_class<VaporMesh>(true);
 	ClassDB::register_class<VaporTrail>();
-	ClassDB::register_class<VaporTrailMesh>(true);
 }
 
 void uninitialize_vaportrail_module(ModuleInitializationLevel p_level) {

@@ -4,13 +4,13 @@
 #include <godot_cpp/variant/packed_color_array.hpp>
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
+#include <vapor_point.hpp>
 #include <vapor_trail.hpp>
-#include <vapor_trail_point.hpp>
 
 namespace godot {
 
-class VaporTrailMesh : public MeshInstance3D {
-	GDCLASS(VaporTrailMesh, MeshInstance3D)
+class VaporMesh : public MeshInstance3D {
+	GDCLASS(VaporMesh, MeshInstance3D)
 
 	friend class VaporTrail;
 
@@ -31,7 +31,7 @@ private:
 	PackedColorArray color_buffer;
 
 	int num_points;
-	VaporTrailPoint *trail_points;
+	VaporPoint *trail_points;
 
 protected:
 	static void _bind_methods();
@@ -39,8 +39,8 @@ protected:
 	void offset_mesh_points(Vector3 offset);
 
 public:
-	VaporTrailMesh();
-	~VaporTrailMesh();
+	VaporMesh();
+	~VaporMesh();
 
 	void _ready() override;
 	void _process(double delta) override;
