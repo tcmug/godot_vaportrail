@@ -22,7 +22,7 @@ private:
 	Ref<VaporProps> props;
 
 	Array geometry;
-	Vector3 direction_vector;
+	Vector3 latest_direction_vector;
 
 	PackedVector3Array vertex_buffer;
 	PackedVector3Array normal_buffer;

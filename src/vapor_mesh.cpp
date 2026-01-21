@@ -2,6 +2,7 @@
 #include "vapor_point.hpp"
 // #include <godot_cpp/core/class_db.hpp>
 
+#include <cassert>
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/material.hpp>
@@ -30,6 +31,9 @@ void VaporMesh::initialize_arrays() {
 		return;
 	}
 
+	// Trigger first emit immediately
+	elapsed = props->update_interval;
+
 	vertex_buffer.resize(num_points * 2);
 	normal_buffer.resize(num_points * 2);
 	tangent_buffer.resize(num_points * 2 * 4);
@@ -43,12 +47,11 @@ void VaporMesh::initialize_arrays() {
 	trail_points = new VaporPoint[num_points];
 	Transform3D emitter_transform = props->emitter->get_global_transform();
 	for (int i = 0; i < num_points; i++) {
-		Vector3 origin = to_local(emitter_transform.origin);
+		Vector3 origin = emitter_transform.origin;
 		trail_points[i].position = origin;
-		trail_points[i].source_position = origin;
 		trail_points[i].direction.zero();
 		trail_points[i].up.zero();
-		trail_points[i].size = 0;
+		trail_points[i].size = props->size;
 	}
 }
 
@@ -143,12 +146,13 @@ void VaporMesh::_process(double delta) {
 	if (props->emitter) {
 		props->emitter_transform = props->emitter->get_global_transform();
 	}
-	Vector3 current_position = props->emitter_transform.origin;
-	Transform3D inverse_transform = props->emitter_transform.inverse();
-	Vector3 new_direction_vector = previous_transform.origin.direction_to(current_position);
 
-	if (new_direction_vector.length() > 0.0) {
-		direction_vector = new_direction_vector;
+	Vector3 latest_emitter_position = props->emitter_transform.origin;
+	Transform3D inverse_transform = props->emitter_transform.inverse();
+	Vector3 new_direction_vector = previous_transform.origin.direction_to(latest_emitter_position);
+
+	if (new_direction_vector.length_squared() > 0.0) {
+		latest_direction_vector = new_direction_vector;
 	}
 
 	int num_vertices = vertex_buffer.size();
@@ -168,13 +172,9 @@ void VaporMesh::_process(double delta) {
 
 	double update_fraction = elapsed / update_interval;
 
-	// Interpolate last point towards second last for smoother effect.
-	//	trail_points[num_points - 1].lerp(trail_points[num_points - 2], update_fraction);
-
 	// Update active point.
-	trail_points[0].position = current_position;
-	trail_points[0].source_position = current_position;
-	trail_points[0].direction = direction_vector;
+	trail_points[0].position = latest_emitter_position;
+	trail_points[0].direction = latest_direction_vector;
 	if (props->alignment > 0 && props->alignment < 4) {
 		trail_points[0].up = inverse_transform.basis[props->alignment - 1];
 	}
@@ -203,7 +203,7 @@ void VaporMesh::_process(double delta) {
 		if (i < 1) {
 			point = trail_points[i];
 		} else {
-			point = trail_points[i].xlerp(trail_points[i - 1], update_fraction);
+			point = trail_points[i].lerp(trail_points[i - 1], update_fraction);
 		}
 
 		// -1 ensures the last point sampled isn't somewhere beyond num_points.
@@ -226,6 +226,7 @@ void VaporMesh::_process(double delta) {
 		double sz = point.size;
 		sz = calculate_scaled_size(sz, dist, fov_rad, viewport_height, props->minimum_onscreen_size);
 		if (props->curve.is_valid()) {
+			assert(fi >= 0 && fi < num_points);
 			sz *= props->curve->sample_baked(fi);
 		}
 
@@ -259,8 +260,6 @@ void VaporMesh::_process(double delta) {
 		uv_buffer[uvi++] = Vector2(ux, 0);
 		uv_buffer[uvi++] = Vector2(ux, 1);
 
-		// As the gradient is color per vertex, too hard gradients cause mesh to flicker,
-		// probably interpolate between the points or make this a texture?
 		if (props->gradient.is_valid()) {
 			// Two vertices with same color.
 			Color color = props->gradient->sample(fi);

@@ -20,7 +20,7 @@ public:
 	int alignment = 0;
 	int num_points = 200;
 	float noise_scale = 0.0;
-	float size = 1.0;
+	float size = 0.0;
 	float minimum_onscreen_size = 0.0;
 
 	Transform3D emitter_transform;

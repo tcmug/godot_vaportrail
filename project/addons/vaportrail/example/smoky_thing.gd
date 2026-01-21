@@ -1,7 +1,10 @@
-extends CharacterBody3D
+extends VaporTrail
+
+var velocity: Vector3
+var ttl: float = 1.0
 
 func _enter_tree() -> void:
-	$VaporTrail.set_geometry_root(get_parent().get_path())
+	set_geometry_root(get_parent().get_path())
 	var random = Vector3(
 		randf_range(-1, 1),
 		randf_range(-1, 1),
@@ -15,9 +18,9 @@ func _physics_process(delta: float) -> void:
 		randf_range(-1, 1),
 		randf_range(-1, 1)
 	).normalized()
-	velocity += random * 4 * delta
-	move_and_slide()
-	$VaporTrail.size = 0.3 * ($Timer.time_left / $Timer.wait_time)
+	velocity += random * 6 * delta
+	position += velocity * delta
 	
-func _on_timer_timeout() -> void:
-	queue_free()
+	ttl -= delta
+	if ttl < 0:
+		queue_free()
