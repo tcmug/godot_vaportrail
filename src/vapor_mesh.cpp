@@ -147,6 +147,7 @@ void VaporMesh::_process(double delta) {
 		props->emitter_transform = props->emitter->get_global_transform();
 	}
 
+	// emitter_transform is WAY different than what the actual interpolated point is (see this by adding a mesh to vaportrail)
 	Vector3 latest_emitter_position = props->emitter_transform.origin;
 	Transform3D inverse_transform = props->emitter_transform.inverse();
 	Vector3 new_direction_vector = previous_transform.origin.direction_to(latest_emitter_position);
@@ -170,7 +171,7 @@ void VaporMesh::_process(double delta) {
 		trail_points[0].size = spawn_size;
 	}
 
-	double update_fraction = elapsed / update_interval;
+	double update_fraction = MIN(1.0, elapsed / update_interval);
 
 	// Update active point.
 	trail_points[0].position = latest_emitter_position;

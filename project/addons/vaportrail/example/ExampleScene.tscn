@@ -145,19 +145,20 @@ curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(0.81876224, 0.022474376, 0.5736792, -9.313144e-10, 0.9992144, -0.039146133, -0.57411754, 0.032051228, 0.8181371, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.81876224, 0.02247432, 0.5736792, -9.313144e-10, 0.9992119, -0.039146133, -0.57411754, 0.032051146, 0.8181371, -1.27339, 0.403995, 0.598389)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
 mesh = SubResource("BoxMesh_job12")
 
-[node name="TrailEmitter" type="VaporTrail" parent="Path3D/PathFollow3D/MeshInstance3D"]
+[node name="Tr0n" type="VaporTrail" parent="Path3D/PathFollow3D/MeshInstance3D"]
 config/alignment = 2
 config/num_points = 20
 visual/material = SubResource("StandardMaterial3D_5enqk")
 visual/size = 0.1
 visual/minimum_onscreen_size = 20.0
 visual/color_gradient = SubResource("Gradient_dx8xt")
+unique_name_in_owner = true
 transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Path3D3" type="Path3D" parent="."]
@@ -166,21 +167,21 @@ curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D3"]
-transform = Transform3D(0.8187647, 0.022474416, 0.57368, -9.3131725e-10, 0.9992162, -0.039146185, -0.57411927, 0.032051284, 0.8181382, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.8187647, 0.02247436, 0.57368, -9.3131725e-10, 0.9992137, -0.039146185, -0.57411927, 0.032051206, 0.8181382, -1.27339, 0.403995, 0.598389)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D3/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
 mesh = SubResource("BoxMesh_2hso6")
 
-[node name="TrailEmitter" type="VaporTrail" parent="Path3D3/PathFollow3D/MeshInstance3D"]
+[node name="Vapor" type="VaporTrail" parent="Path3D3/PathFollow3D/MeshInstance3D"]
 config/num_points = 60
 config/update_interval = 0.05
-config/randomness = 0.2
+config/randomness = 0.3
 visual/material = SubResource("StandardMaterial3D_romn7")
 visual/size = 0.1
-visual/minimum_onscreen_size = 20.0
 visual/color_gradient = SubResource("Gradient_4frb0")
 visual/uv_shift = -0.5
+unique_name_in_owner = true
 transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Path3D2" type="Path3D" parent="."]
@@ -200,7 +201,7 @@ script = ExtResource("3_tpcue")
 environment = SubResource("Environment_72flp")
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.5
 autostart = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
