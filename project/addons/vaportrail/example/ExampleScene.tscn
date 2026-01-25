@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://duuj8y4ltnxx4"]
+[gd_scene load_steps=22 format=3 uid="uid://duuj8y4ltnxx4"]
 
 [ext_resource type="Script" uid="uid://dbvaxllvh5a5m" path="res://addons/vaportrail/example/example_scene.gd" id="1_2hso6"]
 [ext_resource type="Texture2D" uid="uid://gn7hoa3umle6" path="res://addons/vaportrail/example/tr0n.png" id="1_6iu73"]
 [ext_resource type="Texture2D" uid="uid://6hiavd5uxq8r" path="res://addons/vaportrail/example/normal.png" id="2_m823o"]
 [ext_resource type="Script" uid="uid://ck8eb0fy28vat" path="res://addons/vaportrail/example/Camera.gd" id="3_tpcue"]
 [ext_resource type="Texture2D" uid="uid://b3ojc6x8opvon" path="res://addons/vaportrail/example/vapor.png" id="4_2hso6"]
+[ext_resource type="Texture2D" uid="uid://cwt2x4v85inl2" path="res://addons/vaportrail/example/vaportrail.png" id="4_romn7"]
 
 [sub_resource type="Animation" id="Animation_f5fpc"]
 resource_name = "Go!"
@@ -46,6 +47,18 @@ tracks/2/keys = {
 "update": 0,
 "values": [0.0, 1.0]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Path3D4/PathFollow3D:progress_ratio")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 16),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
 
 [sub_resource type="Animation" id="Animation_7sftb"]
 length = 0.001
@@ -56,6 +69,18 @@ tracks/0/path = NodePath("Path3D3/PathFollow3D:progress_ratio")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Path3D4/PathFollow3D:progress_ratio")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -91,6 +116,16 @@ normal_texture = ExtResource("2_m823o")
 [sub_resource type="Gradient" id="Gradient_dx8xt"]
 offsets = PackedFloat32Array(0, 0.056047197, 0.899705, 1)
 colors = PackedColorArray(1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4frb0"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("4_romn7")
+emission_enabled = true
+emission = Color(0.8675581, 0.8931362, 0.42420506, 1)
+emission_energy_multiplier = 0.0
+normal_texture = ExtResource("2_m823o")
 
 [sub_resource type="BoxMesh" id="BoxMesh_2hso6"]
 size = Vector3(0.1, 0.1, 0.1)
@@ -145,7 +180,8 @@ curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D"]
-transform = Transform3D(0.81876224, 0.02247432, 0.5736792, -9.313144e-10, 0.9992119, -0.039146133, -0.57411754, 0.032051146, 0.8181371, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.818762, 0.022475021, 0.57367903, -8.8381717e-07, 0.9992111, -0.03914611, -0.57411736, 0.032050602, 0.8181369, -1.27339, 0.40399498, 0.59838885)
+progress = 17.421824
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
@@ -161,13 +197,34 @@ visual/color_gradient = SubResource("Gradient_dx8xt")
 unique_name_in_owner = true
 transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
 
+[node name="Path3D4" type="Path3D" parent="."]
+transform = Transform3D(0.8359415, -0.5488186, 0, 0.2978388, 0.45365775, -0.83993256, 0.4609706, 0.70213443, 0.5426908, 0, 0.155, 0)
+curve = SubResource("Curve3D_1cqmv")
+metadata/_edit_group_ = true
+
+[node name="PathFollow3D" type="PathFollow3D" parent="Path3D4"]
+transform = Transform3D(0.81876224, 0.02247427, 0.5736792, -9.313144e-10, 0.9992097, -0.039146133, -0.57411754, 0.032051075, 0.8181371, -1.27339, 0.403995, 0.598389)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D4/PathFollow3D"]
+transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
+mesh = SubResource("BoxMesh_job12")
+
+[node name="Banner" type="VaporTrail" parent="Path3D4/PathFollow3D/MeshInstance3D"]
+config/alignment = 2
+config/num_points = 20
+config/update_interval = 0.05
+visual/material = SubResource("StandardMaterial3D_4frb0")
+visual/size = 0.3
+visual/minimum_onscreen_size = 20.0
+transform = Transform3D(1.0000005, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0, 0)
+
 [node name="Path3D3" type="Path3D" parent="."]
 transform = Transform3D(-0.22554617, 1.9717872e-08, -0.9742325, -8.742278e-08, -1, 0, -0.9742325, 8.517011e-08, 0.22554617, 0, 0.8261885, 0)
 curve = SubResource("Curve3D_1cqmv")
 metadata/_edit_group_ = true
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D3"]
-transform = Transform3D(0.8187647, 0.02247436, 0.57368, -9.3131725e-10, 0.9992137, -0.039146185, -0.57411927, 0.032051206, 0.8181382, -1.27339, 0.403995, 0.598389)
+transform = Transform3D(0.8187647, 0.022474308, 0.57367986, -9.3131725e-10, 0.9992114, -0.039146177, -0.57411927, 0.03205113, 0.8181381, -1.27339, 0.403995, 0.598389)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Path3D3/PathFollow3D"]
 transform = Transform3D(1, 0, 0, 0, 1.0000001, -1.8626451e-09, 0, 1.8626451e-09, 1.0000001, 0, 0, 0)
@@ -189,7 +246,8 @@ transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 
 curve = SubResource("Curve3D_45udd")
 
 [node name="PathFollow3D" type="PathFollow3D" parent="Path3D2"]
-transform = Transform3D(0.0893655, -2.830915e-05, -0.9959881, -9.094849e-13, 1, -2.8422568e-05, 0.9959881, 2.5400527e-06, 0.0893655, 0, 0, 3)
+transform = Transform3D(0.08977058, 2.469846e-05, -0.9959514, -6.1730952e-06, 1, 2.4241897e-05, 0.9959514, 3.9719816e-06, 0.08977058, 0, -2.2737368e-13, 3)
+progress = 18.806753
 tilt_enabled = false
 
 [node name="Camera3D" type="Camera3D" parent="Path3D2/PathFollow3D"]
