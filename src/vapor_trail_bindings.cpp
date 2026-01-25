@@ -38,7 +38,7 @@ void VaporTrail::_bind_methods() {
 
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "config/alignment", PROPERTY_HINT_ENUM, "Camera,X,Y,Z"), "set_alignment", "get_alignment");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::NODE_PATH, "config/geometry_nodepath"), "set_geometry_root", "get_geometry_root");
-	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "config/num_points"), "set_num_points", "get_num_points");
+	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "config/num_points", PROPERTY_HINT_RANGE, "2,10000,1"), "set_num_points", "get_num_points");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "config/update_interval"), "set_update_interval", "get_update_interval");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "config/randomness"), "set_randomness", "get_randomness");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::OBJECT, "visual/material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_material", "get_material");
