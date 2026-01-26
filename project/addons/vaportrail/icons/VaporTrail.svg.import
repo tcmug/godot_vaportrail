@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b43d7ybt3onhm"
-path="res://.godot/imported/TrailEmitter.svg-86feb2e0c2a501c6e9214bff36dc7518.ctex"
+path="res://.godot/imported/VaporTrail.svg-40d08d3046e4b39f86b8b7a110f302f4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/vaportrail/icons/TrailEmitter.svg"
-dest_files=["res://.godot/imported/TrailEmitter.svg-86feb2e0c2a501c6e9214bff36dc7518.ctex"]
+source_file="res://addons/vaportrail/icons/VaporTrail.svg"
+dest_files=["res://.godot/imported/VaporTrail.svg-40d08d3046e4b39f86b8b7a110f302f4.ctex"]
 
 [params]
 

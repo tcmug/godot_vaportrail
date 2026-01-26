@@ -4,7 +4,7 @@ entry_symbol = "vaportrail_library_init"
 compatibility_minimum = 4.1
 
 [icons]
-TrailEmitter = "res://addons/vaportrail/icons/TrailEmitter.svg"
+VaporTrail = "res://addons/vaportrail/icons/VaporTrail.svg"
 
 [libraries]
 
