@@ -157,6 +157,7 @@ void VaporMesh::_process(double delta) {
 	}
 
 	int num_vertices = vertex_buffer.size();
+
 	elapsed += delta;
 	total_elapsed += delta;
 
@@ -197,31 +198,23 @@ void VaporMesh::_process(double delta) {
 
 	// Since points are fixed in space, animate uv (x) over the update interval.
 	double uv_adjustment = (total_elapsed * uv_shift);
+	double fi_step = 1.0 / double(num_points - 1);
+	double fi = 0;
 
 	for (int i = 0; i < num_points; i++) {
 		VaporPoint point;
 
 		if (i < 1) {
-			point = trail_points[i];
+			point = trail_points[0];
 		} else {
 			point = trail_points[i].lerp(trail_points[i - 1], update_fraction);
 		}
 
-		// -1 ensures the last point sampled isn't somewhere beyond num_points.
-		double fi = double(i) / (num_points - 1);
-
 		Vector3 normal = point.position.direction_to(camera_position);
-		Vector3 orientation;
-
-		if (props->alignment == 0) {
-			// Normalize for keeping sizes consistent.
-			orientation = normal.cross(point.direction).normalized();
-		} else {
-			orientation = point.up;
-		}
-
+		Vector3 orientation = props->alignment == 0 ? normal.cross(point.direction).normalized() : point.up;
 		Vector3 tangent = point.direction;
 		Vector3 to_cam = camera_position - point.position;
+
 		float dist = to_cam.length();
 
 		double sz = point.size;
@@ -231,7 +224,7 @@ void VaporMesh::_process(double delta) {
 			sz *= props->curve->sample_baked(fi);
 		}
 
-		Vector3 edge_vector = orientation * (sz * 0.5);
+		const Vector3 edge_vector = orientation * (sz * 0.5);
 		const Vector3 &position = point.position;
 
 		// Keep track of min and max points.
@@ -267,6 +260,8 @@ void VaporMesh::_process(double delta) {
 			color_buffer[ci++] = color;
 			color_buffer[ci++] = color;
 		}
+
+		fi += fi_step;
 	}
 
 	set_custom_aabb(AABB(min_pos, max_pos - min_pos));
