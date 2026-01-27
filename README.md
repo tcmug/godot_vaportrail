@@ -29,7 +29,8 @@ Godot 4.x vapor trails and ribbon effects.
 
 This is a new and improved version of [godot_trailmesh](https://github.com/tcmug/godot_trailmesh).
 
-Still a bit of work to do.
+VaporTrail allows you to add 3D trails via an emitter, have the shape defined by a curve and colored with a gradient.
+You can set the alignment of the trail mesh to camera or any if the axis of the mitter (x, y, z).
 
 ### Settings
 
