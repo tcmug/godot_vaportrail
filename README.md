@@ -1,5 +1,9 @@
 # Vaportrail
+
+<img width="100" height="112" alt="vaportrail" src="https://github.com/user-attachments/assets/9564b23b-5014-4bc4-b1c9-de62b2939e2e" />
+
 <!--toc:start-->
+
 - [Vaportrail](#vaportrail)
   - [About](#about)
     - [Settings](#settings)
