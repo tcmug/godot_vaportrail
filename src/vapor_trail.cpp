@@ -103,6 +103,14 @@ double VaporTrail::get_uv_shift() const {
 	return props->uv_shift;
 }
 
+int VaporTrail::get_uv_alignment() const {
+	return props->uv_alignment;
+}
+
+void VaporTrail::set_uv_alignment(int value) {
+	props->uv_alignment = value;
+}
+
 void VaporTrail::_ready() {
 	Node *geometry_root_node = get_node_or_null(geometry_root);
 	if (!geometry_root_node) {

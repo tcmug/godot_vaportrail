@@ -60,6 +60,8 @@ public:
 
 	double get_uv_shift() const;
 	void set_uv_shift(double value);
+	int get_uv_alignment() const;
+	void set_uv_alignment(int value);
 
 	double get_update_interval() const;
 	void set_update_interval(double value);

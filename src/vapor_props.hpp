@@ -17,7 +17,7 @@ protected:
 	static void _bind_methods();
 
 public:
-	int alignment = 0;
+	int alignment = 0; // 0 = Camera, 1 = X, 2 = Y, 3 = Z.
 	int num_points = 200;
 	float noise_scale = 0.0;
 	float size = 0.0;
@@ -28,6 +28,7 @@ public:
 
 	double update_interval = 0.1;
 	double uv_shift = 0.0;
+	int uv_alignment = 0; // 0 = Plain (linear), 1 = Distance-based
 
 	Ref<Gradient> gradient;
 	Ref<Curve> curve;
