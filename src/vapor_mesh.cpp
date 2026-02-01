@@ -52,6 +52,7 @@ void VaporMesh::initialize_arrays() {
 		trail_points[i].direction.zero();
 		trail_points[i].up.zero();
 		trail_points[i].size = props->size;
+		trail_points[i].u = 0;
 	}
 }
 
@@ -177,6 +178,7 @@ void VaporMesh::_process(double delta) {
 	// Update active point.
 	trail_points[0].position = latest_emitter_position;
 	trail_points[0].direction = latest_direction_vector;
+	trail_points[0].u = trail_points[0].position.distance_to(trail_points[1].position) + trail_points[1].u;
 	if (props->alignment > 0 && props->alignment < 4) {
 		trail_points[0].up = inverse_transform.basis[props->alignment - 1];
 	}
@@ -250,9 +252,15 @@ void VaporMesh::_process(double delta) {
 		tangent_buffer[ti++] = tangent.z;
 		tangent_buffer[ti++] = 1;
 
-		double ux = fi + uv_adjustment;
-		uv_buffer[uvi++] = Vector2(ux, 0);
-		uv_buffer[uvi++] = Vector2(ux, 1);
+		if (props->uv_alignment == 0) {
+			double ux = fi + uv_adjustment;
+			uv_buffer[uvi++] = Vector2(ux, 0);
+			uv_buffer[uvi++] = Vector2(ux, 1);
+		} else {
+			double ux = point.u + uv_adjustment;
+			uv_buffer[uvi++] = Vector2(ux, 0);
+			uv_buffer[uvi++] = Vector2(ux, 1);
+		}
 
 		if (props->gradient.is_valid()) {
 			// Two vertices with same color.
