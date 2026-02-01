@@ -49,7 +49,7 @@ void VaporTrail::_bind_methods() {
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "visual/minimum_onscreen_size", PROPERTY_HINT_RANGE, "0.0,100.0,0.01"), "set_minimum_onscreen_size", "get_minimum_onscreen_size");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::OBJECT, "visual/color_gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "visual/uv_shift", PROPERTY_HINT_RANGE, "-100.0,100.0,0.001"), "set_uv_shift", "get_uv_shift");
-	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "visual/uv_alignment", PROPERTY_HINT_ENUM, "Plain,Distance"), "set_uv_alignment", "get_uv_alignment");
+	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "visual/uv_alignment", PROPERTY_HINT_ENUM, "Fixed,Rolling"), "set_uv_alignment", "get_uv_alignment");
 }
 
 bool VaporTrail::_set(const StringName &p_name, const Variant &p_value) {

@@ -3,7 +3,6 @@
 <img width="100" height="112" alt="vaportrail" src="https://github.com/user-attachments/assets/9564b23b-5014-4bc4-b1c9-de62b2939e2e" />
 
 <!--toc:start-->
-
 - [Vaportrail](#vaportrail)
   - [About](#about)
     - [Settings](#settings)
@@ -38,6 +37,14 @@ You can set the alignment of the trail mesh to camera or any if the axis of the 
 
 #### Config
 
+| Property | Description |
+|----------|-------------|
+| **Alignment** | Defines mesh orientation: Camera, X, Y, or Z axis |
+| **Geometry Nodepath** | Node path for mesh placement when camera unavailable |
+| **Num(ber of) Points** | Mesh detail/length (higher = more detailed) |
+| **Update Interval** | Frequency of new point generation (lower = smoother) |
+| **Randomness** | Adds randomness to point sizes |
+
 ##### Alignment
 
 Defines how to align/orient the mesh:
@@ -69,6 +76,16 @@ Adds a bit of randomness to the point size.
 
 #### Visual
 
+| Property | Description |
+|----------|-------------|
+| **Material** | Material applied to the mesh (avoid billboarding) |
+| **Size** | Width of the trail ribbon in units |
+| **Minimum Onscreen Size** | Ensures visibility at distance (camera alignment only) |
+| **Size Curve** | Adjusts point sizes along the trail |
+| **Color Gradient** | Applies color variation to the trail |
+| **UV Shift** | Animates texture by shifting UV coordinates |
+| **UV Alignment** | UV calculation mode: Fixed (linear) or Rolling (distance-based) |
+
 ##### Material
 
 The material applied to the mesh. NOTE: as the mesh itself is already "billboarded" billboarding via material will break things.
@@ -91,4 +108,11 @@ Gives color to your trail.
 
 ##### UV Shift
 
-Applies simple animation by shofting the positioning of the texture in the uv x axis.
+Applies simple animation by shifting the positioning of the texture in the uv x axis.
+
+##### UV Alignment
+
+Controls how UV coordinates are calculated along the trail:
+
+- **Fixed**: Linear UV progression (head is at u-coordinate 0 and tail is 1)
+- **Rolling**: Distance-based UV progression (texture rolls along trail)

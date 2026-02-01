@@ -28,7 +28,7 @@ public:
 
 	double update_interval = 0.1;
 	double uv_shift = 0.0;
-	int uv_alignment = 0; // 0 = Plain (linear), 1 = Distance-based
+	int uv_alignment = 0; // 0 = Fixed (linear), 1 = Rolling (distance-based)
 
 	Ref<Gradient> gradient;
 	Ref<Curve> curve;
