@@ -5,6 +5,7 @@
 #include <godot_cpp/variant/packed_vector3_array.hpp>
 
 #include <vapor_point.hpp>
+#include <vapor_props.hpp>
 #include <vapor_trail.hpp>
 
 namespace godot {

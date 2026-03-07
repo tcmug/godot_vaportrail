@@ -1,4 +1,5 @@
 #include "vapor_mesh.hpp"
+#include "godot_cpp/variant/transform3d.hpp"
 #include "vapor_point.hpp"
 // #include <godot_cpp/core/class_db.hpp>
 
@@ -6,6 +7,7 @@
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/material.hpp>
+#include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -24,6 +26,7 @@ VaporMesh::VaporMesh() {
 }
 
 void VaporMesh::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("offset_mesh_points", "amount"), &VaporMesh::offset_mesh_points);
 }
 
 void VaporMesh::initialize_arrays() {
@@ -54,18 +57,6 @@ void VaporMesh::initialize_arrays() {
 		trail_points[i].size = props->size;
 		trail_points[i].u = 0;
 	}
-}
-
-void VaporMesh::offset_mesh_points(Vector3 offset) {
-	if (!props.is_valid()) {
-		return;
-	}
-
-	//Transform3D emitter_transform = props->emitter->get_global_transform();
-	//	props->emitter_transform.origin += offset;
-	//for (int i = 0; i < num_points; i++) {
-	//		trail_points[i].center += offset;
-	//	}
 }
 
 VaporMesh::~VaporMesh() {
@@ -99,21 +90,6 @@ void VaporMesh::_ready() {
 	initialize_arrays();
 }
 
-float calculate_scaled_size(
-		float size, // Size of the point in 3D space
-		float d, // Distance from camera to point
-		float fovY, // Camera's vertical FOV (radians)
-		float screen_height, // Screen height (pixels)
-		float min_size_pixels // Minimum size on screen (pixels)
-) {
-	float s_screen = (size * screen_height) / (d * tan(fovY / 2.0f));
-	if (s_screen < min_size_pixels) {
-		return (min_size_pixels * d * tan(fovY / 2.0f)) / screen_height;
-	} else {
-		return size;
-	}
-}
-
 void VaporMesh::_process(double delta) {
 	if (!props->emitter) {
 		// Handle removal
@@ -124,11 +100,12 @@ void VaporMesh::_process(double delta) {
 		}
 	}
 
+	set_visible(props->visible);
+
 	double uv_shift = props->uv_shift;
 	double update_interval = props->update_interval;
 
 	Viewport *viewport = get_viewport();
-
 	if (!viewport) {
 		UtilityFunctions::push_error("No viewport, try setting geometry nodepath?");
 		set_process(false);
@@ -136,7 +113,6 @@ void VaporMesh::_process(double delta) {
 	}
 
 	Camera3D *camera = viewport->get_camera_3d();
-
 	if (!camera) {
 		UtilityFunctions::push_error("No camera, try setting geometry nodepath?");
 		set_process(false);
@@ -203,6 +179,9 @@ void VaporMesh::_process(double delta) {
 	double fi_step = 1.0 / double(num_points - 1);
 	double fi = 0;
 
+	double to_pixels = (viewport_height / 2.0) / tan(fov_rad / 2.0);
+	double pixel_scale = (props->minimum_onscreen_size / to_pixels);
+
 	for (int i = 0; i < num_points; i++) {
 		VaporPoint point;
 
@@ -212,15 +191,18 @@ void VaporMesh::_process(double delta) {
 			point = trail_points[i].lerp(trail_points[i - 1], update_fraction);
 		}
 
-		Vector3 normal = point.position.direction_to(camera_position);
+		Vector3 to_camera = camera_position - point.position;
+		Vector3 normal = to_camera.normalized();
 		Vector3 orientation = props->alignment == 0 ? normal.cross(point.direction).normalized() : point.up;
 		Vector3 tangent = point.direction;
-		Vector3 to_cam = camera_position - point.position;
 
-		float dist = to_cam.length();
-
+		// Apply minimum size.
 		double sz = point.size;
-		sz = calculate_scaled_size(sz, dist, fov_rad, viewport_height, props->minimum_onscreen_size);
+		double distance = to_camera.length();
+		if ((sz / distance) * to_pixels < props->minimum_onscreen_size) {
+			sz = pixel_scale * distance;
+		}
+
 		if (props->curve.is_valid()) {
 			assert(fi >= 0 && fi < num_points);
 			sz *= props->curve->sample_baked(fi);
@@ -293,5 +275,12 @@ void VaporMesh::_process(double delta) {
 	if (material.is_valid()) {
 		material->set_shader_parameter("MAX_VERTICES", float(num_vertices));
 		material->set_shader_parameter("SPAWN_INTERVAL_SECONDS", float(update_interval));
+	}
+}
+
+void VaporMesh::offset_mesh_points(Vector3 offset) {
+	props->emitter_transform.origin += offset;
+	for (int i = 0; i < num_points; i++) {
+		trail_points[i].position += offset;
 	}
 }

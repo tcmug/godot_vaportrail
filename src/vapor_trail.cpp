@@ -7,7 +7,8 @@
 using namespace godot;
 
 VaporTrail::VaporTrail() {
-	props = Ref<VaporProps>(memnew(VaporProps));
+	props.instantiate();
+	//= Ref<VaporProps>(memnew(VaporProps));
 	props->emitter = this;
 }
 
@@ -116,9 +117,16 @@ void VaporTrail::_ready() {
 	if (!geometry_root_node) {
 		geometry_root_node = this;
 	}
-	VaporMesh *trail_mesh = memnew(VaporMesh);
-	trail_mesh->props = props;
-	trail_mesh->set_material_override(props->material);
-	trail_mesh->set_as_top_level(true);
-	geometry_root_node->call_deferred("add_child", trail_mesh);
+
+	props->visible = is_visible();
+	vapor_mesh = memnew(VaporMesh);
+
+	vapor_mesh->props = props;
+	vapor_mesh->set_material_override(props->material);
+	vapor_mesh->set_as_top_level(true);
+	geometry_root_node->call_deferred("add_child", vapor_mesh);
+}
+
+Node3D *VaporTrail::get_mesh_node() {
+	return vapor_mesh;
 }

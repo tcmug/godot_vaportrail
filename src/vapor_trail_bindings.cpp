@@ -30,10 +30,10 @@ void VaporTrail::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_uv_alignment"), &VaporTrail::get_uv_alignment);
 	ClassDB::bind_method(D_METHOD("set_update_interval", "value"), &VaporTrail::set_update_interval);
 	ClassDB::bind_method(D_METHOD("get_update_interval"), &VaporTrail::get_update_interval);
-	//	ClassDB::bind_method(D_METHOD("offset_mesh_points", "amount"), &VaporTrail::offset_mesh_points);
 
 	ClassDB::bind_method(D_METHOD("set_alignment", "value"), &VaporTrail::set_alignment);
 	ClassDB::bind_method(D_METHOD("get_alignment"), &VaporTrail::get_alignment);
+	ClassDB::bind_method(D_METHOD("get_mesh_node"), &VaporTrail::get_mesh_node);
 
 	ADD_GROUP("Config", "config");
 	ADD_GROUP("Visual", "visual");

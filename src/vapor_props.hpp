@@ -17,10 +17,11 @@ protected:
 	static void _bind_methods();
 
 public:
+	bool visible = true;
 	int alignment = 0; // 0 = Camera, 1 = X, 2 = Y, 3 = Z.
 	int num_points = 200;
 	float noise_scale = 0.0;
-	float size = 0.0;
+	float size = 1.0;
 	float minimum_onscreen_size = 0.0;
 
 	Transform3D emitter_transform;

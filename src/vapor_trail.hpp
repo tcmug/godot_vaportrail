@@ -11,15 +11,14 @@ namespace godot {
 
 class VaporProps;
 
-class VaporTrailMesh;
+class VaporMesh;
 
 class VaporTrail : public Node3D {
 	GDCLASS(VaporTrail, Node3D)
 
-	friend class VaporTrailMesh;
-
 private:
 	Ref<VaporProps> props;
+	VaporMesh *vapor_mesh;
 	NodePath geometry_root;
 
 protected:
@@ -65,6 +64,8 @@ public:
 
 	double get_update_interval() const;
 	void set_update_interval(double value);
+
+	Node3D *get_mesh_node();
 
 protected:
 	virtual bool _set(const StringName &p_name, const Variant &p_value);
