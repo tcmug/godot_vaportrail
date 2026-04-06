@@ -13,6 +13,7 @@
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/classes/world3d.hpp>
+#include <godot_cpp/core/object_id.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #define min(a, b) (a < b ? a : b)
@@ -41,7 +42,7 @@ Camera3D *VaporMesh::find_camera_3d() {
 
 	// If running in editor, find the editor camera
 	if (Engine::get_singleton()->is_editor_hint()) {
-		if (cached_editor_camera && UtilityFunctions::is_instance_valid(cached_editor_camera)) {
+		if (cached_editor_camera && ObjectDB::get_instance(cached_editor_camera->get_instance_id())) {
 			return cached_editor_camera;
 		}
 		cached_editor_camera = nullptr;
