@@ -4,7 +4,7 @@
 		3D vapor trails and ribbon effects.
 	</brief_description>
 	<description>
-		VaporTrail allows you to add 3D trails via an emitter, have the shape defined by a curve and colored with a gradient. You can set the alignment of the trail mesh to camera or any of the axes of the emitter (X, Y, Z).
+		VaporTrail allows you to add 3D trails via an emitter, have the shape defined by a curve and colored with a gradient.
 	</description>
 	<tutorials>
 	</tutorials>

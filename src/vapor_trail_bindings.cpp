@@ -44,20 +44,7 @@ void VaporTrail::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_mesh_node"), &VaporTrail::get_mesh_node);
 
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::BOOL, "emitting"), "set_emitting", "get_emitting");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "config/alignment", PROPERTY_HINT_ENUM, "Camera,X,Y,Z"), "set_alignment", "get_alignment");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::NODE_PATH, "config/geometry_nodepath"), "set_geometry_root", "get_geometry_root");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "config/num_points", PROPERTY_HINT_RANGE, "2,10000,1"), "set_num_points", "get_num_points");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "config/update_interval"), "set_update_interval", "get_update_interval");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "config/randomness"), "set_randomness", "get_randomness");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::OBJECT, "visual/material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_material", "get_material");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "visual/size", PROPERTY_HINT_RANGE, "0.0,100.0,0.01"), "set_size", "get_size");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::OBJECT, "visual/size_curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_curve", "get_curve");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "visual/minimum_onscreen_size", PROPERTY_HINT_RANGE, "0.0,100.0,0.01"), "set_minimum_onscreen_size", "get_minimum_onscreen_size");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::OBJECT, "visual/color_gradient", PROPERTY_HINT_RESOURCE_TYPE, "Gradient"), "set_gradient", "get_gradient");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::FLOAT, "visual/uv_shift", PROPERTY_HINT_RANGE, "-100.0,100.0,0.001"), "set_uv_shift", "get_uv_shift");
-	// ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "visual/uv_alignment", PROPERTY_HINT_ENUM, "Fixed,Rolling"), "set_uv_alignment", "get_uv_alignment");
 
-	// Runtime-accessible flat properties (hidden from editor)
 	ADD_GROUP("Config", "");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::INT, "alignment", PROPERTY_HINT_ENUM, "Camera,X,Y,Z"), "set_alignment", "get_alignment");
 	ClassDB::add_property("VaporTrail", PropertyInfo(Variant::NODE_PATH, "geometry_nodepath", PROPERTY_HINT_NONE, ""), "set_geometry_root", "get_geometry_root");
@@ -94,7 +81,7 @@ bool VaporTrail::_set(const StringName &p_name, const Variant &p_value) {
 		set_randomness(p_value);
 		return true;
 	}
-	// Migration from old config/visual/temporal prefixed names.
+	// Migration from old config/visual prefixed names.
 	if (p_name == StringName("config/alignment")) {
 		set_alignment(p_value);
 		return true;
