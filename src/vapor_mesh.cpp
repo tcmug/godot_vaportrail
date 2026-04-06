@@ -6,10 +6,13 @@
 #include <cassert>
 #include <godot_cpp/classes/array_mesh.hpp>
 #include <godot_cpp/classes/camera3d.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/material.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 #include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/world3d.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #define min(a, b) (a < b ? a : b)
@@ -23,6 +26,49 @@ VaporMesh::VaporMesh() {
 	num_points = 0;
 	total_elapsed = 0.0;
 	trail_points = nullptr;
+	cached_editor_camera = nullptr;
+}
+
+Camera3D *VaporMesh::find_camera_3d() {
+	// Try the normal viewport camera first (in-game and when scene has a Camera3D)
+	Viewport *viewport = get_viewport();
+	if (viewport) {
+		Camera3D *camera = viewport->get_camera_3d();
+		if (camera) {
+			return camera;
+		}
+	}
+
+	// If running in editor, find the editor camera
+	if (Engine::get_singleton()->is_editor_hint()) {
+		if (cached_editor_camera && UtilityFunctions::is_instance_valid(cached_editor_camera)) {
+			return cached_editor_camera;
+		}
+		cached_editor_camera = nullptr;
+
+		Ref<World3D> world = get_world_3d();
+		SceneTree *tree = get_tree();
+		if (world.is_valid() && tree) {
+			TypedArray<Node> cameras = tree->get_root()->find_children("*", "Camera3D", true, false);
+			for (int i = 0; i < cameras.size(); i++) {
+				Camera3D *cam = Object::cast_to<Camera3D>(cameras[i].operator Object *());
+				if (cam && cam->is_current() && cam->get_world_3d() == world) {
+					cached_editor_camera = cam;
+					return cam;
+				}
+			}
+			// Fallback: any camera in the same world
+			for (int i = 0; i < cameras.size(); i++) {
+				Camera3D *cam = Object::cast_to<Camera3D>(cameras[i].operator Object *());
+				if (cam && cam->get_world_3d() == world) {
+					cached_editor_camera = cam;
+					return cam;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 void VaporMesh::_bind_methods() {
@@ -105,17 +151,8 @@ void VaporMesh::_process(double delta) {
 	double uv_shift = props->uv_shift;
 	double update_interval = props->update_interval;
 
-	Viewport *viewport = get_viewport();
-	if (!viewport) {
-		UtilityFunctions::push_error("No viewport, try setting geometry nodepath?");
-		set_process(false);
-		return;
-	}
-
-	Camera3D *camera = viewport->get_camera_3d();
+	Camera3D *camera = find_camera_3d();
 	if (!camera) {
-		UtilityFunctions::push_error("No camera, try setting geometry nodepath?");
-		set_process(false);
 		return;
 	}
 

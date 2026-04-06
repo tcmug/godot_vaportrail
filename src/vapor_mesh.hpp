@@ -10,6 +10,7 @@
 
 namespace godot {
 
+class Camera3D;
 class VaporMesh : public MeshInstance3D {
 	GDCLASS(VaporMesh, MeshInstance3D)
 
@@ -24,6 +25,9 @@ private:
 
 	Array geometry;
 	Vector3 latest_direction_vector;
+	Camera3D *cached_editor_camera;
+
+	Camera3D *find_camera_3d();
 
 	PackedVector3Array vertex_buffer;
 	PackedVector3Array normal_buffer;
