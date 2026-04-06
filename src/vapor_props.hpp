@@ -18,6 +18,7 @@ protected:
 
 public:
 	bool visible = true;
+	bool emitting = true;
 	int alignment = 0; // 0 = Camera, 1 = X, 2 = Y, 3 = Z.
 	int num_points = 200;
 	float noise_scale = 0.0;
@@ -31,8 +32,12 @@ public:
 	double uv_shift = 0.0;
 	int uv_alignment = 0; // 0 = Fixed (linear), 1 = Rolling (distance-based)
 
+	float current_time = 0.0;
+
 	Ref<Gradient> gradient;
 	Ref<Curve> curve;
+	Ref<Curve> time_curve;
+	Ref<Gradient> time_color_gradient;
 	Ref<Material> material;
 };
 } //namespace godot

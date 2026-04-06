@@ -49,12 +49,16 @@ void VaporMesh::initialize_arrays() {
 	}
 	trail_points = new VaporPoint[num_points];
 	Transform3D emitter_transform = props->emitter->get_global_transform();
+	float initial_time_curve = props->time_curve.is_valid() ? props->time_curve->sample_baked(props->current_time) : 1.0;
+	Color initial_time_color = props->time_color_gradient.is_valid() ? props->time_color_gradient->sample(props->current_time) : Color(1, 1, 1, 1);
 	for (int i = 0; i < num_points; i++) {
 		Vector3 origin = emitter_transform.origin;
 		trail_points[i].position = origin;
 		trail_points[i].direction.zero();
 		trail_points[i].up.zero();
-		trail_points[i].size = props->size;
+		trail_points[i].size = 0.0;
+		trail_points[i].time_curve_multiplier = initial_time_curve;
+		trail_points[i].time_color_multiplier = initial_time_color;
 		trail_points[i].u = 0;
 	}
 }
@@ -142,21 +146,30 @@ void VaporMesh::_process(double delta) {
 		elapsed -= update_interval;
 		memmove(&trail_points[1], trail_points, sizeof(VaporPoint) * (num_points - 1));
 		// Initialize new point size;
-		float spawn_size = props->size;
-		if (props->noise_scale != 0.0) {
+		float spawn_size = props->emitting ? props->size : 0.0;
+		if (props->emitting && props->noise_scale != 0.0) {
 			spawn_size *= UtilityFunctions::randf_range(1.0 - props->noise_scale, 1.0 + props->noise_scale);
 		}
 		trail_points[0].size = spawn_size;
+		trail_points[0].time_curve_multiplier = props->time_curve.is_valid() ? props->time_curve->sample_baked(props->current_time) : 1.0;
+		trail_points[0].time_color_multiplier = props->time_color_gradient.is_valid() ? props->time_color_gradient->sample(props->current_time) : Color(1, 1, 1, 1);
 	}
 
 	double update_fraction = MIN(1.0, elapsed / update_interval);
 
 	// Update active point.
-	trail_points[0].position = latest_emitter_position;
-	trail_points[0].direction = latest_direction_vector;
-	trail_points[0].u = trail_points[0].position.distance_to(trail_points[1].position) + trail_points[1].u;
-	if (props->alignment > 0 && props->alignment < 4) {
-		trail_points[0].up = inverse_transform.basis[props->alignment - 1];
+	if (props->emitting) {
+		trail_points[0].position = latest_emitter_position;
+		trail_points[0].direction = latest_direction_vector;
+		trail_points[0].u = trail_points[0].position.distance_to(trail_points[1].position) + trail_points[1].u;
+		if (props->alignment > 0 && props->alignment < 4) {
+			trail_points[0].up = inverse_transform.basis[props->alignment - 1];
+		}
+	} else {
+		trail_points[0].position = trail_points[1].position;
+		trail_points[0].direction = trail_points[1].direction;
+		trail_points[0].u = trail_points[1].u;
+		trail_points[0].up = trail_points[1].up;
 	}
 
 	Viewport *vp = camera->get_viewport();
@@ -207,6 +220,7 @@ void VaporMesh::_process(double delta) {
 			assert(fi >= 0 && fi < num_points);
 			sz *= props->curve->sample_baked(fi);
 		}
+		sz *= point.time_curve_multiplier;
 
 		const Vector3 edge_vector = orientation * (sz * 0.5);
 		const Vector3 &position = point.position;
@@ -247,6 +261,7 @@ void VaporMesh::_process(double delta) {
 		if (props->gradient.is_valid()) {
 			// Two vertices with same color.
 			Color color = props->gradient->sample(fi);
+			color *= point.time_color_multiplier;
 			color_buffer[ci++] = color;
 			color_buffer[ci++] = color;
 		}

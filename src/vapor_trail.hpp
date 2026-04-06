@@ -30,6 +30,9 @@ public:
 
 	void _ready() override;
 
+	bool get_emitting() const;
+	void set_emitting(bool value);
+
 	NodePath get_geometry_root() const;
 	void set_geometry_root(NodePath nodepath);
 
@@ -50,6 +53,15 @@ public:
 
 	Ref<Curve> get_curve() const;
 	void set_curve(const Ref<Curve> new_curve);
+
+	Ref<Curve> get_time_curve() const;
+	void set_time_curve(const Ref<Curve> new_curve);
+
+	Ref<Gradient> get_time_color_gradient() const;
+	void set_time_color_gradient(const Ref<Gradient> new_gradient);
+
+	float get_current_time() const;
+	void set_current_time(float value);
 
 	Ref<Gradient> get_gradient() const;
 	void set_gradient(const Ref<Gradient> new_gradient);
