@@ -16,6 +16,14 @@ VaporTrail::~VaporTrail() {
 	props->emitter = nullptr;
 }
 
+bool VaporTrail::get_emitting() const {
+	return props->emitting;
+}
+
+void VaporTrail::set_emitting(bool value) {
+	props->emitting = value;
+}
+
 int VaporTrail::get_alignment() const {
 	return props->alignment;
 }
@@ -54,6 +62,30 @@ void VaporTrail::set_curve(Ref<Curve> new_curve) {
 
 Ref<Curve> VaporTrail::get_curve() const {
 	return props->curve;
+}
+
+void VaporTrail::set_time_curve(Ref<Curve> new_curve) {
+	props->time_curve = new_curve;
+}
+
+Ref<Curve> VaporTrail::get_time_curve() const {
+	return props->time_curve;
+}
+
+void VaporTrail::set_time_color_gradient(Ref<Gradient> new_gradient) {
+	props->time_color_gradient = new_gradient;
+}
+
+Ref<Gradient> VaporTrail::get_time_color_gradient() const {
+	return props->time_color_gradient;
+}
+
+void VaporTrail::set_current_time(float value) {
+	props->current_time = CLAMP(value, 0.0f, 1.0f);
+}
+
+float VaporTrail::get_current_time() const {
+	return props->current_time;
 }
 
 void VaporTrail::set_gradient(Ref<Gradient> new_gradient) {

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="VaporTrail" inherits="Node3D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		3D vapor trails and ribbon effects.
+	</brief_description>
+	<description>
+		VaporTrail allows you to add 3D trails via an emitter, have the shape defined by a curve and colored with a gradient.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_mesh_node">
+			<return type="Node3D" />
+			<description>
+				Returns the underlying mesh node.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="emitting" type="bool" setter="set_emitting" getter="get_emitting">
+			Whether the trail is currently emitting new points.
+		</member>
+		<member name="alignment" type="int" setter="set_alignment" getter="get_alignment">
+			Defines mesh orientation: Camera, X, Y, or Z axis.
+		</member>
+		<member name="geometry_nodepath" type="NodePath" setter="set_geometry_root" getter="get_geometry_root">
+			Node path for mesh placement when the active camera cannot be fetched (e.g. when using viewports). Also allows the trail to fade out instead of abruptly disappearing when the VaporTrail node is removed.
+		</member>
+		<member name="num_points" type="int" setter="set_num_points" getter="get_num_points">
+			How many points the mesh can have. Defines how detailed and how long the trail is along with [member update_interval].
+		</member>
+		<member name="update_interval" type="float" setter="set_update_interval" getter="get_update_interval">
+			How often a new point is pushed to the mesh when moving. Lower values result in a smoother trail.
+		</member>
+		<member name="randomness" type="float" setter="set_randomness" getter="get_randomness">
+			Adds randomness to point sizes.
+		</member>
+		<member name="material" type="Material" setter="set_material" getter="get_material">
+			Material applied to the mesh. Billboarding via material will break things as the mesh itself is already billboarded.
+		</member>
+		<member name="size" type="float" setter="set_size" getter="get_size">
+			Width of the trail ribbon in units.
+		</member>
+		<member name="size_curve" type="Curve" setter="set_curve" getter="get_curve">
+			Adjusts point sizes along the trail to give it shape. Affects [member minimum_onscreen_size].
+		</member>
+		<member name="minimum_onscreen_size" type="float" setter="set_minimum_onscreen_size" getter="get_minimum_onscreen_size">
+			Ensures the mesh will not be smaller than the given amount of pixels when rendered. Only applies to trails with Camera alignment.
+		</member>
+		<member name="color_gradient" type="Gradient" setter="set_gradient" getter="get_gradient">
+			Applies color variation to the trail.
+		</member>
+		<member name="uv_shift" type="float" setter="set_uv_shift" getter="get_uv_shift">
+			Applies simple animation by shifting the texture positioning in the UV x axis.
+		</member>
+		<member name="uv_alignment" type="int" setter="set_uv_alignment" getter="get_uv_alignment">
+			Controls how UV coordinates are calculated along the trail. Fixed: linear UV progression (head at 0, tail at 1). Rolling: distance-based UV progression (texture rolls along trail).
+		</member>
+		<member name="current_time" type="float" setter="set_current_time" getter="get_current_time">
+			Temporal position from 0 to 1, intended to be driven externally (e.g. with a tween).
+		</member>
+		<member name="time_curve" type="Curve" setter="set_time_curve" getter="get_time_curve">
+			Applies a size modifier to the trail based on [member current_time]. Applied multiplicatively with [member size] and [member size_curve].
+		</member>
+		<member name="time_color_gradient" type="Gradient" setter="set_time_color_gradient" getter="get_time_color_gradient">
+			Applies a color modifier to the trail based on [member current_time]. Applied multiplicatively with [member color_gradient].
+		</member>
+	</members>
+</class>

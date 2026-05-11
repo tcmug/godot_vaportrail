@@ -4,21 +4,26 @@
 
 <!--toc:start-->
 - [Vaportrail](#vaportrail)
-  - [About](#about)
-    - [Settings](#settings)
-      - [Config](#config)
-        - [Alignment](#alignment)
-        - [Geometry Nodepath](#geometry-nodepath)
-        - [Num(ber of) Points](#number-of-points)
-        - [Update Interval](#update-interval)
-        - [Randomness](#randomness)
-      - [Visual](#visual)
-        - [Material](#material)
-        - [size](#size)
-        - [Minimum Onscreen Size](#minimum-onscreen-size)
-        - [Size Curve](#size-curve)
-        - [Color Gradient](#color-gradient)
-        - [UV Shift](#uv-shift)
+	- [About](#about)
+		- [Settings](#settings)
+			- [Config](#config)
+				- [Alignment](#alignment)
+				- [Geometry Nodepath](#geometry-nodepath)
+				- [Num(ber of) Points](#number-of-points)
+				- [Update Interval](#update-interval)
+				- [Randomness](#randomness)
+			- [Visual](#visual)
+				- [Material](#material)
+				- [Size](#size)
+				- [Minimum Onscreen Size](#minimum-onscreen-size)
+				- [Size Curve](#size-curve)
+				- [Color Gradient](#color-gradient)
+				- [UV Shift](#uv-shift)
+				- [UV Alignment](#uv-alignment)
+			- [Temporal](#temporal)
+				- [Current Time](#current-time)
+				- [Time Curve](#time-curve)
+				- [Time Color Gradient](#time-color-gradient)
 <!--toc:end-->
 Godot 4.x vapor trails and ribbon effects.
 
@@ -116,3 +121,31 @@ Controls how UV coordinates are calculated along the trail:
 
 - **Fixed**: Linear UV progression (head is at u-coordinate 0 and tail is 1)
 - **Rolling**: Distance-based UV progression (texture rolls along trail)
+
+#### Temporal
+
+When a segment is created, its' initial state is determined by the `current_time` and the temporal properties. For example, if temporal gradient transitions from red to blue, then the start of the trail will be red, and the end of the trail - blue.
+
+| Property | Description |
+|----------|-------------|
+| **Current Time** | Temporal position, from 0 to 1 |
+| **Time Curve** | Encodes the size of the trail based on current time |
+| **Time Color Gradient** | Encodes the color of the trail based on current time |
+
+##### Current Time
+
+Temporal position, intended to be driven externally. For example, with a tween:
+
+```gdscript
+create_tween().tween_property($%Vapor, ^"current_time", 0, 1)
+```
+
+> Accepts values from 0 to 1 inclusive
+
+##### Time Curve
+
+Applies a size modifier to the trail at each value of `current_time`. This is applied multiplicatively with `size` and `size_curve`.
+
+##### Time Color Gradient
+
+Applies a color modifier to the trail at each value of `current_time`. This is applies multiplicatively with `color_gradient`.

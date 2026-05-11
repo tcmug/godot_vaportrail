@@ -53,6 +53,10 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
+if env["target"] in ["editor", "template_debug"]:
+    doc_data = env.GodotCPPDocData("src/gen/doc_data.gen.cpp", source=Glob("src/docs/*.xml"))
+    sources.append(doc_data)
+
 file = "{}{}{}".format(libname, env["suffix"], env["SHLIBSUFFIX"])
 
 if env["platform"] == "macos" or env["platform"] == "ios":
