@@ -21,6 +21,9 @@ bool VaporTrail::get_emitting() const {
 }
 
 void VaporTrail::set_emitting(bool value) {
+	if (value && !props->emitting && vapor_mesh) {
+		vapor_mesh->reset_trail();
+	}
 	props->emitting = value;
 }
 
