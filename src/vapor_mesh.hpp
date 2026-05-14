@@ -49,5 +49,6 @@ public:
 
 	void _ready() override;
 	void _process(double delta) override;
+	void reset_trail();
 };
 } //namespace godot

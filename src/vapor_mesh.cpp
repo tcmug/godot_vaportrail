@@ -114,6 +114,21 @@ VaporMesh::~VaporMesh() {
 	delete[] trail_points;
 }
 
+void VaporMesh::reset_trail() {
+	if (!props.is_valid() || !props->emitter) {
+		return;
+	}
+	props->emitter_transform = props->emitter->get_global_transform();
+	Vector3 origin = props->emitter->get_global_transform().origin;
+	for (int i = 0; i < num_points; i++) {
+		trail_points[i].position = origin;
+		trail_points[i].direction = latest_direction_vector;
+		trail_points[i].size = props->size;
+		trail_points[i].up = Vector3(0, 0, 0);
+	}
+	elapsed = 0.0;
+}
+
 void VaporMesh::_ready() {
 	if (!props.is_valid()) {
 		UtilityFunctions::push_error("Spawned VaporTrailMesh without props, freeing");
